@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component xmlns="http://www.opensource-socialnetwork.org/v/3.0">
+    <name>Couples</name>
+    <id>couples</id>
+    <author>Iberis &amp; Sebastian</author>
+    <version>2.5</version>
+    <description>Solicitudes de pareja desde la pantalla de editar perfil, con botón propio y sugerencias de usuario (autocomplete). Versión sin uso de bind() para compatibilidad con tu servidor. Requiere la tabla ossn_couples.</description>
+    <license>Custom</license>
+    <author_url>https://spaguettio.com</author_url>
+    <license_url>https://spaguettio.com</license_url>
+    <requires>
+        <type>ossn_version</type>
+        <version>6.5</version>
+    </requires>
+</component>
