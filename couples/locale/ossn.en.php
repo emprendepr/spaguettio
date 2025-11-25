@@ -1,0 +1,25 @@
+<?php
+$en = array(
+    'couples:title' => 'Verified couples',
+    'couples:page:title' => 'Your couples',
+    'couples:label:username' => 'Username of your partner',
+    'couples:label:relationship' => 'Relationship text (e.g. In a relationship with, Married to)',
+    'couples:placeholder' => 'e.g. In a relationship with',
+    'couples:hint:edit' => 'Start typing the username. Then write the relationship text and send the request.',
+    'couples:sendrequest' => 'Send couple request',
+    'couples:requests:incoming' => 'Pending couple requests',
+    'couples:requests:none' => 'You have no pending couple requests.',
+    'couples:requests:current' => 'Your current couples',
+    'couples:accept' => 'Accept',
+    'couples:reject' => 'Reject',
+    'couples:remove' => 'Remove relationship',
+    'couples:request:sent' => 'Couple request sent. The other person must accept it.',
+    'couples:removed' => 'Couple relationship removed.',
+    'couples:accepted' => 'Couple request accepted.',
+    'couples:error:notfound' => 'We could not find that user.',
+    'couples:error:self' => 'You cannot create a couple relationship with yourself.',
+    'couples:error:nopartner' => 'You must choose a partner and a relationship text.',
+    'couples:error:already:requested' => 'You already sent a couple request to this user.',
+    'couples:error:generic' => 'There was a problem processing your request. Please try again.',
+);
+ossn_register_languages('en', $en);

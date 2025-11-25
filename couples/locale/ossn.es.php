@@ -1,0 +1,25 @@
+<?php
+$es = array(
+    'couples:title' => 'Parejas verificadas',
+    'couples:page:title' => 'Tus parejas',
+    'couples:label:username' => 'Nombre de usuario de tu pareja',
+    'couples:label:relationship' => 'Texto de relación (Ej. En una relación con, Casada con)',
+    'couples:placeholder' => 'Ej: En una relación con',
+    'couples:hint:edit' => 'Empieza a escribir el username y escógelo de la lista. Luego escribe el texto de relación y envía la solicitud.',
+    'couples:sendrequest' => 'Enviar solicitud de pareja',
+    'couples:requests:incoming' => 'Solicitudes de pareja recibidas',
+    'couples:requests:none' => 'No tienes solicitudes de pareja pendientes.',
+    'couples:requests:current' => 'Tus parejas actuales',
+    'couples:accept' => 'Aceptar',
+    'couples:reject' => 'Rechazar',
+    'couples:remove' => 'Eliminar relación',
+    'couples:request:sent' => 'Solicitud de pareja enviada. La otra persona debe aceptarla.',
+    'couples:removed' => 'Relación de pareja eliminada.',
+    'couples:accepted' => 'Solicitud de pareja aceptada.',
+    'couples:error:notfound' => 'No encontramos a ese usuario.',
+    'couples:error:self' => 'No puedes crear una relación de pareja contigo misma.',
+    'couples:error:nopartner' => 'Debes escoger una pareja y escribir el texto de relación.',
+    'couples:error:already:requested' => 'Ya enviaste una solicitud de pareja a esta persona.',
+    'couples:error:generic' => 'Ocurrió un problema procesando la solicitud. Intenta nuevamente.',
+);
+ossn_register_languages('es', $es);

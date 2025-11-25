@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component xmlns="http://www.opensource-socialnetwork.org/v/3.0">
+    <name>Couples</name>
+    <id>couples</id>
+    <author>Iberis &amp; Sebastian</author>
+    <description>Relaciones de pareja verificadas usando ossn_relationships (couple:request / couple) con formulario en Editar perfil.</description>
+    <license>Custom</license>
+    <author_url>https://spaguettio.com</author_url>
+    <license_url>https://spaguettio.com</license_url>
+    <version>3.2</version>
+</component>
