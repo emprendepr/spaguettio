@@ -44,13 +44,14 @@ function spaguettio_chat_init() {
     
     // Add menu items
     if (ossn_isLoggedin()) {
-        // Add sidebar link to chat room
-        ossn_register_menu_item('sidebar', array(
+        // Add sidebar link to chat room (using OSSN sections menu like Messages component)
+        $icon = ossn_site_url('components/SpaguettioChat/images/chat-icon.png');
+        ossn_register_sections_menu('newsfeed', array(
             'name' => 'chat',
             'text' => ossn_print('spaguettio:chat:menu'),
-            'href' => ossn_site_url('chat'),
-            'icon' => 'fa-comments',
-            'priority' => 5,
+            'url' => ossn_site_url('chat'),
+            'parent' => 'links',
+            'icon' => $icon,
         ));
     }
     
