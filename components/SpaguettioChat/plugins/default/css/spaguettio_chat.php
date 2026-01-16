@@ -1,8 +1,9 @@
+<?php
 /**
  * Spaguettio Chat Styles
  * LatinChat-inspired design
  */
-
+?>
 /* Main Chat Container */
 .spaguettio-chat-container {
     background: #fff;

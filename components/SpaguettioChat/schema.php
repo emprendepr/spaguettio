@@ -62,7 +62,7 @@ function spaguettio_chat_install() {
         `id` int(11) NOT NULL AUTO_INCREMENT,
         `user_guid` int(11) NOT NULL,
         `username` varchar(255) NOT NULL,
-        `accepted` tinyint(1) DEFAULT 1,
+        `accepted` tinyint(1) DEFAULT 0,
         `time_accepted` int(11) NOT NULL,
         PRIMARY KEY (`id`),
         UNIQUE KEY `user_guid` (`user_guid`),

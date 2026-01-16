@@ -37,7 +37,6 @@ if ($db->execute()) {
                      VALUES ({$room_id}, {$user_guid}, '{$username}', '" . $db->escape($leave_message) . "', 'system', {$time})";
     $db->statement($system_query);
     $db->execute();
-    $db->execute($system_query);
     
     echo json_encode(array('success' => true));
 } else {

@@ -1,8 +1,9 @@
+<?php
 /**
  * Spaguettio Chat JavaScript
  * Real-time chat functionality
  */
-
+?>
 var SpaguettioChat = {
     currentUser: null,
     currentRoom: 'main',
