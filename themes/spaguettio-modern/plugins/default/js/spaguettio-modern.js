@@ -120,25 +120,50 @@
         const form = document.querySelector('.ossn-form');
         if (form) {
             form.addEventListener('submit', function(e) {
+                // Clear previous error messages
+                const existingErrors = form.querySelectorAll('.validation-error');
+                existingErrors.forEach(error => error.remove());
+                
+                let hasErrors = false;
+                
                 const emailInput = form.querySelector('input[name="email"]');
                 const emailConfirm = form.querySelector('input[name="email_confirm"]');
                 
                 if (emailInput && emailConfirm) {
                     if (emailInput.value !== emailConfirm.value) {
                         e.preventDefault();
-                        alert('Los correos electrónicos no coinciden');
+                        showValidationError(emailConfirm, 'Los correos electrónicos no coinciden');
                         emailConfirm.focus();
-                        return false;
+                        hasErrors = true;
                     }
                 }
                 
                 const termsCheckbox = form.querySelector('input[name="terms"]');
                 if (termsCheckbox && !termsCheckbox.checked) {
                     e.preventDefault();
-                    alert('Debes aceptar los términos y condiciones');
+                    showValidationError(termsCheckbox, 'Debes aceptar los términos y condiciones');
+                    hasErrors = true;
+                }
+                
+                if (hasErrors) {
                     return false;
                 }
             });
+        }
+        
+        // Helper function to show validation errors
+        function showValidationError(element, message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'validation-error';
+            errorDiv.textContent = message;
+            errorDiv.style.color = 'var(--primary-color)';
+            errorDiv.style.fontSize = '12px';
+            errorDiv.style.marginTop = '5px';
+            
+            const formGroup = element.closest('.form-group');
+            if (formGroup) {
+                formGroup.appendChild(errorDiv);
+            }
         }
     }
     
@@ -155,14 +180,12 @@
                 if (radio) {
                     radio.checked = true;
                     
-                    // Visual feedback: remove active state from all, add to clicked
+                    // Visual feedback: remove active class from all, add to clicked
                     genderOptions.forEach(opt => {
-                        opt.style.borderColor = 'var(--border-color)';
-                        opt.style.background = 'rgba(30, 30, 30, 0.6)';
+                        opt.classList.remove('active');
                     });
                     
-                    this.style.borderColor = 'var(--primary-color)';
-                    this.style.background = 'rgba(30, 30, 30, 0.8)';
+                    this.classList.add('active');
                 }
             });
         });

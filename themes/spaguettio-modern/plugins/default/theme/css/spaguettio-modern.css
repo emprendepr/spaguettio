@@ -390,6 +390,11 @@
     background: rgba(30, 30, 30, 0.8);
 }
 
+.gender-option.active {
+    border-color: var(--primary-color);
+    background: rgba(30, 30, 30, 0.8);
+}
+
 .gender-option input[type="radio"] {
     accent-color: var(--primary-color);
 }
@@ -435,6 +440,25 @@
     color: var(--text-gray);
     font-size: 13px;
     margin-top: 10px;
+}
+
+/* Validation Error Messages */
+.validation-error {
+    color: var(--primary-color);
+    font-size: 12px;
+    margin-top: 5px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Features Section */
