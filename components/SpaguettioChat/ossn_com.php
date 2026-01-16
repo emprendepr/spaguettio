@@ -45,7 +45,7 @@ function spaguettio_chat_init() {
     // Add menu items
     if (ossn_isLoggedin()) {
         // Add sidebar link to chat room
-        ossn_register_menu_item('site', array(
+        ossn_register_menu_item('sidebar', array(
             'name' => 'chat',
             'text' => ossn_print('spaguettio:chat:menu'),
             'href' => ossn_site_url('chat'),
