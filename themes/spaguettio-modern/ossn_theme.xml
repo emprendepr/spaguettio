@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<theme xmlns="http://www.opensource-socialnetwork.org/v/3.0">
+    <name>Spaguettio Modern</name>
+    <id>spaguettio-modern</id>
+    <author_name>Spaguettio Team</author_name>
+    <author_email>info@spaguettio.com</author_email>
+    <author_url>https://spaguettio.com</author_url>
+    <license>Custom</license>
+    <license_url>https://spaguettio.com</license_url>
+    <version>1.0</version>
+    <description>Modern landing page theme with neon design for Spaguettio</description>
+</theme>
