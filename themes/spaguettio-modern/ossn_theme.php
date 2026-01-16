@@ -13,6 +13,10 @@ function spaguettio_modern_init() {
     // Registrar JavaScript
     ossn_extend_view('js/opensource.socialnetwork', 'js/spaguettio-modern');
     
+    // Cargar idiomas
+    include_once(SPAGUETTIO_MODERN_THEME . 'plugins/default/locale/ossn.en.php');
+    include_once(SPAGUETTIO_MODERN_THEME . 'plugins/default/locale/ossn.es.php');
+    
     // Extender el layout de la página principal solo para usuarios no logueados
     if (!ossn_isLoggedin()) {
         ossn_extend_view('page/layouts/body', 'theme/page/layouts/home');
