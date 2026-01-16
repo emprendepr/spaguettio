@@ -4,7 +4,7 @@
  */
 
 if (!ossn_isLoggedin()) {
-    redirect(ossn_site_url('login'));
+    header("Location: " . ossn_site_url('login'));
     exit;
 }
 
@@ -17,7 +17,7 @@ $user_guid = $user->guid;
 
 if ($action === 'decline') {
     // User declined terms, redirect to homepage
-    redirect(ossn_site_url());
+    header("Location: " . ossn_site_url());
     exit;
 }
 
@@ -40,22 +40,22 @@ if ($action === 'accept') {
         if ($db->execute()) {
             // Success - redirect to chat room
             ossn_trigger_message(ossn_print('spaguettio:chat:terms:accepted'), 'success');
-            redirect(ossn_site_url('chat/room'));
+            header("Location: " . ossn_site_url('chat/room'));
             exit;
         } else {
             // Database error
             ossn_trigger_message(ossn_print('spaguettio:chat:error:terms'), 'error');
-            redirect(ossn_site_url('chat/terms'));
+            header("Location: " . ossn_site_url('chat/terms'));
             exit;
         }
     } catch (Exception $e) {
         // Exception occurred
         ossn_trigger_message(ossn_print('spaguettio:chat:error:database'), 'error');
-        redirect(ossn_site_url('chat/terms'));
+        header("Location: " . ossn_site_url('chat/terms'));
         exit;
     }
 } else {
     // Invalid action
-    redirect(ossn_site_url());
+    header("Location: " . ossn_site_url());
     exit;
 }
