@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+    <name>Spaguettio Chat</name>
+    <id>SpaguettioChat</id>
+    <author>Spaguettio</author>
+    <description>Sala de chat en vivo estilo LatinChat para Spaguettio</description>
+    <version>1.0</version>
+    <license>GPL</license>
+    <author_url>https://github.com/emprendepr/spaguettio</author_url>
+    <requires>
+        <type>ossn_version</type>
+        <version>5.0</version>
+    </requires>
+</component>
