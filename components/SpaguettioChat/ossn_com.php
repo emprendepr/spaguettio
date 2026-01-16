@@ -71,7 +71,7 @@ function spaguettio_chat_init() {
  * Chat room page handler
  */
 function spaguettio_chat_page_handler($pages) {
-    $page = $pages[0] ?? 'terms';
+    $page = isset($pages[0]) ? $pages[0] : '';
     
     if (!ossn_isLoggedin()) {
         redirect(ossn_site_url('login'));
@@ -97,18 +97,29 @@ function spaguettio_chat_page_handler($pages) {
         $has_accepted = false;
     }
     
-    // If accessing 'room' directly but hasn't accepted terms, show terms
-    if ($page === 'room' && !$has_accepted) {
+    // If user has accepted terms and no specific page requested, go to room
+    if (empty($page) && $has_accepted) {
+        $page = 'room';
+    }
+    
+    // If user hasn't accepted terms and no specific page requested, show terms
+    if (empty($page) && !$has_accepted) {
         $page = 'terms';
     }
     
-    // If hasn't accepted terms and not explicitly viewing 'terms', show terms
-    if (!$has_accepted && $page !== 'terms') {
+    // If accessing 'room' but hasn't accepted terms, show terms instead
+    if ($page === 'room' && !$has_accepted) {
         $page = 'terms';
     }
     
     // Show terms page
     if ($page === 'terms') {
+        // If already accepted, redirect to room
+        if ($has_accepted) {
+            redirect(ossn_site_url('chat/room'));
+            exit;
+        }
+        
         $title = ossn_print('spaguettio:chat:terms:title');
         $content = ossn_plugin_view('chat/terms');
         
@@ -123,7 +134,12 @@ function spaguettio_chat_page_handler($pages) {
     }
     
     // Show chat room (only if terms accepted)
-    if ($page === 'room' && $has_accepted) {
+    if ($page === 'room') {
+        if (!$has_accepted) {
+            redirect(ossn_site_url('chat/terms'));
+            exit;
+        }
+        
         $title = ossn_print('spaguettio:chat:title');
         $content = ossn_plugin_view('chat/room');
         
@@ -137,8 +153,8 @@ function spaguettio_chat_page_handler($pages) {
         return;
     }
     
-    // Default: redirect to terms
-    redirect(ossn_site_url('chat/terms'));
+    // Unknown page - show 404
+    ossn_error_page();
 }
 
 /**
