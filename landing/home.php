@@ -139,14 +139,14 @@
         <div class="registration-container">
             <h2 class="section-title">Únete a la Comunidad</h2>
             <p class="section-description">Crea tu perfil de pareja y comienza a conectar con otras parejas hoy mismo.</p>
-            <form class="registration-form">
+            <form class="registration-form" method="POST" action="/register">
                 <div class="form-row">
-                    <input type="text" placeholder="Nombre de Usuario 1" class="form-input">
-                    <input type="text" placeholder="Nombre de Usuario 2" class="form-input">
+                    <input type="text" name="username1" placeholder="Nombre de Usuario 1" class="form-input" aria-label="Nombre de Usuario 1" required>
+                    <input type="text" name="username2" placeholder="Nombre de Usuario 2" class="form-input" aria-label="Nombre de Usuario 2" required>
                 </div>
                 <div class="form-row">
-                    <input type="email" placeholder="Email" class="form-input">
-                    <input type="password" placeholder="Contraseña" class="form-input">
+                    <input type="email" name="email" placeholder="Email" class="form-input" aria-label="Email" required>
+                    <input type="password" name="password" placeholder="Contraseña" class="form-input" aria-label="Contraseña" required>
                 </div>
                 <button type="submit" class="btn btn-primary btn-large">Registrarse Gratis</button>
             </form>

@@ -44,11 +44,25 @@ if (registrationForm) {
         });
         
         if (isValid) {
-            // Form is valid, you can submit it here
-            console.log('Form is valid and ready to submit');
-            alert('¡Gracias por registrarte! Te contactaremos pronto.');
+            // Form is valid - in production, this would submit to the server
+            // For now, we'll show a simple feedback message
+            const submitBtn = registrationForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = '¡Enviado! ✓';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                registrationForm.reset();
+            }, 3000);
         } else {
-            alert('Por favor completa todos los campos');
+            // Show validation errors inline
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    input.placeholder = 'Este campo es requerido';
+                }
+            });
         }
     });
 }
