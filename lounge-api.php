@@ -4,17 +4,43 @@ session_start();
 // Constantes
 define('MESSAGES_FILE', 'lounge_messages.json');
 define('USERS_FILE', 'lounge_users.json');
+define('COUNTER_FILE', 'lounge_counter.json');
 
 // Header JSON
 header('Content-Type: application/json');
 
 // Inicializar archivos si no existen
 if (!file_exists(MESSAGES_FILE)) {
-    file_put_contents(MESSAGES_FILE, json_encode([]));
+    $fp = fopen(MESSAGES_FILE, 'c');
+    if (flock($fp, LOCK_EX)) {
+        if (filesize(MESSAGES_FILE) == 0) {
+            fwrite($fp, json_encode([]));
+        }
+        flock($fp, LOCK_UN);
+    }
+    fclose($fp);
 }
 
 if (!file_exists(USERS_FILE)) {
-    file_put_contents(USERS_FILE, json_encode([]));
+    $fp = fopen(USERS_FILE, 'c');
+    if (flock($fp, LOCK_EX)) {
+        if (filesize(USERS_FILE) == 0) {
+            fwrite($fp, json_encode([]));
+        }
+        flock($fp, LOCK_UN);
+    }
+    fclose($fp);
+}
+
+if (!file_exists(COUNTER_FILE)) {
+    $fp = fopen(COUNTER_FILE, 'c');
+    if (flock($fp, LOCK_EX)) {
+        if (filesize(COUNTER_FILE) == 0) {
+            fwrite($fp, json_encode(['message_id' => 0]));
+        }
+        flock($fp, LOCK_UN);
+    }
+    fclose($fp);
 }
 
 // Generar nombre de usuario si no existe
@@ -29,7 +55,14 @@ if (!isset($_SESSION['user_color'])) {
 
 // Función para actualizar actividad del usuario
 function updateUserActivity() {
-    $users = json_decode(file_get_contents(USERS_FILE), true);
+    $fp = fopen(USERS_FILE, 'c+');
+    if (!flock($fp, LOCK_EX)) {
+        fclose($fp);
+        return;
+    }
+    
+    $content = fread($fp, filesize(USERS_FILE) ?: 1);
+    $users = json_decode($content ?: '[]', true);
     if (!is_array($users)) {
         $users = [];
     }
@@ -62,7 +95,11 @@ function updateUserActivity() {
         return ($currentTime - $user['last_activity']) <= 30;
     });
     
-    file_put_contents(USERS_FILE, json_encode(array_values($users)));
+    ftruncate($fp, 0);
+    rewind($fp);
+    fwrite($fp, json_encode(array_values($users)));
+    flock($fp, LOCK_UN);
+    fclose($fp);
 }
 
 // Actualizar actividad del usuario
@@ -75,18 +112,44 @@ switch ($action) {
     case 'send':
         $message = trim($_POST['message'] ?? '');
         
+        // Validación y sanitización
         if (empty($message)) {
             echo json_encode(['error' => 'Mensaje vacío']);
             exit;
         }
         
-        $messages = json_decode(file_get_contents(MESSAGES_FILE), true);
+        // Limitar longitud del mensaje
+        if (strlen($message) > 500) {
+            echo json_encode(['error' => 'Mensaje muy largo (máximo 500 caracteres)']);
+            exit;
+        }
+        
+        // Sanitizar el mensaje
+        $message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
+        
+        // Obtener nuevo ID con file locking
+        $fpCounter = fopen(COUNTER_FILE, 'c+');
+        flock($fpCounter, LOCK_EX);
+        $counterContent = fread($fpCounter, filesize(COUNTER_FILE) ?: 1);
+        $counter = json_decode($counterContent ?: '{"message_id":0}', true);
+        $newId = ++$counter['message_id'];
+        ftruncate($fpCounter, 0);
+        rewind($fpCounter);
+        fwrite($fpCounter, json_encode($counter));
+        flock($fpCounter, LOCK_UN);
+        fclose($fpCounter);
+        
+        // Leer y actualizar mensajes con file locking
+        $fp = fopen(MESSAGES_FILE, 'c+');
+        flock($fp, LOCK_EX);
+        $content = fread($fp, filesize(MESSAGES_FILE) ?: 1);
+        $messages = json_decode($content ?: '[]', true);
         if (!is_array($messages)) {
             $messages = [];
         }
         
         $newMessage = [
-            'id' => count($messages) + 1,
+            'id' => $newId,
             'username' => $_SESSION['username'],
             'color' => $_SESSION['user_color'],
             'message' => $message,
@@ -102,7 +165,11 @@ switch ($action) {
             $messages = array_slice($messages, -100);
         }
         
-        file_put_contents(MESSAGES_FILE, json_encode($messages));
+        ftruncate($fp, 0);
+        rewind($fp);
+        fwrite($fp, json_encode($messages));
+        flock($fp, LOCK_UN);
+        fclose($fp);
         
         echo json_encode(['success' => true]);
         break;
@@ -110,7 +177,16 @@ switch ($action) {
     case 'get_messages':
         $lastId = intval($_GET['last_id'] ?? 0);
         
-        $messages = json_decode(file_get_contents(MESSAGES_FILE), true);
+        $fp = fopen(MESSAGES_FILE, 'r');
+        if (flock($fp, LOCK_SH)) {
+            $content = fread($fp, filesize(MESSAGES_FILE) ?: 1);
+            $messages = json_decode($content ?: '[]', true);
+            flock($fp, LOCK_UN);
+        } else {
+            $messages = [];
+        }
+        fclose($fp);
+        
         if (!is_array($messages)) {
             $messages = [];
         }
@@ -123,7 +199,16 @@ switch ($action) {
         break;
     
     case 'get_users':
-        $users = json_decode(file_get_contents(USERS_FILE), true);
+        $fp = fopen(USERS_FILE, 'r');
+        if (flock($fp, LOCK_SH)) {
+            $content = fread($fp, filesize(USERS_FILE) ?: 1);
+            $users = json_decode($content ?: '[]', true);
+            flock($fp, LOCK_UN);
+        } else {
+            $users = [];
+        }
+        fclose($fp);
+        
         if (!is_array($users)) {
             $users = [];
         }
@@ -134,22 +219,47 @@ switch ($action) {
     case 'change_name':
         $newName = trim($_POST['new_name'] ?? '');
         
+        // Validación y sanitización
         if (empty($newName)) {
             echo json_encode(['error' => 'Nombre vacío']);
             exit;
         }
         
+        // Limitar longitud del nombre
+        if (strlen($newName) > 50) {
+            echo json_encode(['error' => 'Nombre muy largo (máximo 50 caracteres)']);
+            exit;
+        }
+        
+        // Sanitizar el nombre
+        $newName = htmlspecialchars($newName, ENT_QUOTES, 'UTF-8');
+        
         $oldName = $_SESSION['username'];
         $_SESSION['username'] = $newName;
         
+        // Obtener nuevo ID con file locking
+        $fpCounter = fopen(COUNTER_FILE, 'c+');
+        flock($fpCounter, LOCK_EX);
+        $counterContent = fread($fpCounter, filesize(COUNTER_FILE) ?: 1);
+        $counter = json_decode($counterContent ?: '{"message_id":0}', true);
+        $newId = ++$counter['message_id'];
+        ftruncate($fpCounter, 0);
+        rewind($fpCounter);
+        fwrite($fpCounter, json_encode($counter));
+        flock($fpCounter, LOCK_UN);
+        fclose($fpCounter);
+        
         // Agregar mensaje de sistema
-        $messages = json_decode(file_get_contents(MESSAGES_FILE), true);
+        $fp = fopen(MESSAGES_FILE, 'c+');
+        flock($fp, LOCK_EX);
+        $content = fread($fp, filesize(MESSAGES_FILE) ?: 1);
+        $messages = json_decode($content ?: '[]', true);
         if (!is_array($messages)) {
             $messages = [];
         }
         
         $systemMessage = [
-            'id' => count($messages) + 1,
+            'id' => $newId,
             'message' => "$oldName ahora se llama $newName",
             'time' => date('H:i'),
             'timestamp' => time(),
@@ -163,7 +273,11 @@ switch ($action) {
             $messages = array_slice($messages, -100);
         }
         
-        file_put_contents(MESSAGES_FILE, json_encode($messages));
+        ftruncate($fp, 0);
+        rewind($fp);
+        fwrite($fp, json_encode($messages));
+        flock($fp, LOCK_UN);
+        fclose($fp);
         
         echo json_encode(['success' => true]);
         break;
