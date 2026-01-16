@@ -1,0 +1,204 @@
+<?php
+/**
+ * Spaguettio Chat Component
+ * 
+ * A LatinChat-style chat room component for OSSN
+ * 
+ * @package   SpaguettioChat
+ * @author    Spaguettio
+ * @license   GPL
+ */
+
+define('__SPAGUETTIO_CHAT__', ossn_route()->com . 'SpaguettioChat/');
+
+/**
+ * Initialize Spaguettio Chat component
+ */
+function spaguettio_chat_init() {
+    // Register page handlers
+    ossn_register_page('chat', 'spaguettio_chat_page_handler');
+    ossn_register_page('chat-admin', 'spaguettio_chat_admin_page_handler');
+    
+    // Register actions
+    ossn_register_action('chat/send', __SPAGUETTIO_CHAT__ . 'actions/send.php');
+    ossn_register_action('chat/get_messages', __SPAGUETTIO_CHAT__ . 'actions/get_messages.php');
+    ossn_register_action('chat/get_users', __SPAGUETTIO_CHAT__ . 'actions/get_users.php');
+    ossn_register_action('chat/register_user', __SPAGUETTIO_CHAT__ . 'actions/register_user.php');
+    ossn_register_action('chat/unregister_user', __SPAGUETTIO_CHAT__ . 'actions/unregister_user.php');
+    ossn_register_action('chat/accept_terms', __SPAGUETTIO_CHAT__ . 'actions/accept_terms.php');
+    
+    // Register admin actions
+    ossn_register_action('chat/get_rooms', __SPAGUETTIO_CHAT__ . 'actions/get_rooms.php');
+    ossn_register_action('chat/create_room', __SPAGUETTIO_CHAT__ . 'actions/create_room.php');
+    ossn_register_action('chat/edit_room', __SPAGUETTIO_CHAT__ . 'actions/edit_room.php');
+    ossn_register_action('chat/delete_room', __SPAGUETTIO_CHAT__ . 'actions/delete_room.php');
+    ossn_register_action('chat/get_statistics', __SPAGUETTIO_CHAT__ . 'actions/get_statistics.php');
+    ossn_register_action('chat/clear_history', __SPAGUETTIO_CHAT__ . 'actions/clear_history.php');
+    ossn_register_action('chat/save_settings', __SPAGUETTIO_CHAT__ . 'actions/save_settings.php');
+    
+    // Add CSS
+    ossn_extend_view('css/ossn.default', 'css/spaguettio_chat');
+    
+    // Add JS
+    ossn_extend_view('js/ossn.site', 'js/spaguettio_chat');
+    
+    // Add menu items
+    if (ossn_isLoggedin()) {
+        // Add sidebar link to chat room (using OSSN sections menu like Messages component)
+        $icon = ossn_site_url('components/SpaguettioChat/images/chat-icon.png');
+        ossn_register_sections_menu('newsfeed', array(
+            'name' => 'chat',
+            'text' => ossn_print('spaguettio:chat:menu'),
+            'url' => ossn_site_url('chat'),
+            'parent' => 'links',
+            'icon' => $icon,
+        ));
+    }
+    
+    // Add admin topbar link
+    if (ossn_isAdminLoggedin()) {
+        ossn_register_menu_item('topbar_admin', array(
+            'name' => 'chat_admin',
+            'text' => ossn_print('spaguettio:chat:admin:menu'),
+            'href' => ossn_site_url('chat-admin'),
+            'icon' => 'fa-cog',
+            'priority' => 10,
+        ));
+    }
+}
+
+/**
+ * Chat room page handler
+ */
+function spaguettio_chat_page_handler($pages) {
+    $page = isset($pages[0]) ? $pages[0] : '';
+    
+    if (!ossn_isLoggedin()) {
+        redirect(ossn_site_url('login'));
+        return false;
+    }
+    
+    // Check if user has accepted terms
+    $user = ossn_loggedin_user();
+    $user_guid = $user->guid;
+    
+    // Use OssnEntities for database access (OSSN 8.9 compatible)
+    $db = new OssnEntities;
+    
+    // Check if table exists and user has accepted
+    $has_accepted = false;
+    try {
+        $db->statement("SELECT * FROM ossn_spaguettio_chat_terms WHERE user_guid = {$user_guid} AND accepted = 1 LIMIT 1");
+        $db->execute();
+        $result = $db->fetch();
+        $has_accepted = !empty($result);
+    } catch (Exception $e) {
+        // Table might not exist yet or query failed, user hasn't accepted terms
+        $has_accepted = false;
+    }
+    
+    // If user has accepted terms and no specific page requested, go to room
+    if (empty($page) && $has_accepted) {
+        $page = 'room';
+    }
+    
+    // If user hasn't accepted terms and no specific page requested, show terms
+    if (empty($page) && !$has_accepted) {
+        $page = 'terms';
+    }
+    
+    // If accessing 'room' but hasn't accepted terms, show terms instead
+    if ($page === 'room' && !$has_accepted) {
+        $page = 'terms';
+    }
+    
+    // Show terms page
+    if ($page === 'terms') {
+        // If already accepted, redirect to room
+        if ($has_accepted) {
+            redirect(ossn_site_url('chat/room'));
+            exit;
+        }
+        
+        $title = ossn_print('spaguettio:chat:terms:title');
+        $content = ossn_plugin_view('chat/terms');
+        
+        $params = array(
+            'title' => $title,
+            'content' => $content,
+        );
+        
+        $contents = ossn_set_page_layout('newsfeed', $params);
+        echo ossn_view_page($title, $contents);
+        return;
+    }
+    
+    // Show chat room (only if terms accepted)
+    if ($page === 'room') {
+        if (!$has_accepted) {
+            redirect(ossn_site_url('chat/terms'));
+            exit;
+        }
+        
+        $title = ossn_print('spaguettio:chat:title');
+        $content = ossn_plugin_view('chat/room');
+        
+        $params = array(
+            'title' => $title,
+            'content' => $content,
+        );
+        
+        $contents = ossn_set_page_layout('newsfeed', $params);
+        echo ossn_view_page($title, $contents);
+        return;
+    }
+    
+    // Unknown page - show 404
+    ossn_error_page();
+}
+
+/**
+ * Chat admin page handler
+ */
+function spaguettio_chat_admin_page_handler($pages) {
+    ossn_trigger_callback('page', 'load:admin');
+    
+    if (!ossn_isAdminLoggedin()) {
+        redirect(ossn_site_url());
+        return false;
+    }
+    
+    $title = ossn_print('spaguettio:chat:admin:title');
+    $content = ossn_plugin_view('chat/admin');
+    
+    $params = array(
+        'title' => $title,
+        'content' => $content,
+    );
+    
+    $contents = ossn_set_page_layout('administrator', $params);
+    echo ossn_view_page($title, $contents);
+}
+
+/**
+ * Install component
+ */
+function spaguettio_chat_install_handler() {
+    require_once(__SPAGUETTIO_CHAT__ . 'schema.php');
+    return spaguettio_chat_install();
+}
+
+/**
+ * Uninstall component
+ */
+function spaguettio_chat_uninstall_handler() {
+    require_once(__SPAGUETTIO_CHAT__ . 'schema.php');
+    return spaguettio_chat_uninstall();
+}
+
+// Register initialization callback
+ossn_register_callback('ossn', 'init', 'spaguettio_chat_init');
+
+// Register installation callbacks
+ossn_register_callback('component', 'install', 'spaguettio_chat_install_handler');
+ossn_register_callback('component', 'uninstall', 'spaguettio_chat_uninstall_handler');
