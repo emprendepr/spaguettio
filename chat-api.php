@@ -50,6 +50,12 @@ function sendMessage() {
         return;
     }
     
+    // Validate message length
+    if (strlen($message) > 500) {
+        echo json_encode(['success' => false, 'error' => 'Message too long']);
+        return;
+    }
+    
     // Cargar mensajes existentes
     $messages = loadMessages();
     
@@ -158,6 +164,17 @@ function changeName() {
         return;
     }
     
+    // Validate name length and characters
+    if (strlen($newName) > 30) {
+        echo json_encode(['success' => false, 'error' => 'Name too long']);
+        return;
+    }
+    
+    if (!preg_match('/^[a-zA-Z0-9áéíóúñÁÉÍÓÚÑüÜ\s]+$/', $newName)) {
+        echo json_encode(['success' => false, 'error' => 'Invalid characters in name']);
+        return;
+    }
+    
     $oldName = $_SESSION['username'];
     $_SESSION['username'] = $newName;
     
@@ -213,7 +230,11 @@ function loadMessages() {
         return [];
     }
     
-    $content = file_get_contents($messagesFile);
+    $content = @file_get_contents($messagesFile);
+    if ($content === false) {
+        return [];
+    }
+    
     $messages = json_decode($content, true);
     
     return is_array($messages) ? $messages : [];
@@ -226,7 +247,17 @@ function saveMessages($messages) {
     global $messagesFile;
     
     $json = json_encode($messages, JSON_PRETTY_PRINT);
-    file_put_contents($messagesFile, $json);
+    
+    $fp = fopen($messagesFile, 'c');
+    if ($fp) {
+        if (flock($fp, LOCK_EX)) {
+            ftruncate($fp, 0);
+            fwrite($fp, $json);
+            fflush($fp);
+            flock($fp, LOCK_UN);
+        }
+        fclose($fp);
+    }
 }
 
 /**
@@ -239,7 +270,11 @@ function loadUsers() {
         return [];
     }
     
-    $content = file_get_contents($usersFile);
+    $content = @file_get_contents($usersFile);
+    if ($content === false) {
+        return [];
+    }
+    
     $users = json_decode($content, true);
     
     return is_array($users) ? $users : [];
@@ -252,5 +287,15 @@ function saveUsers($users) {
     global $usersFile;
     
     $json = json_encode($users, JSON_PRETTY_PRINT);
-    file_put_contents($usersFile, $json);
+    
+    $fp = fopen($usersFile, 'c');
+    if ($fp) {
+        if (flock($fp, LOCK_EX)) {
+            ftruncate($fp, 0);
+            fwrite($fp, $json);
+            fflush($fp);
+            flock($fp, LOCK_UN);
+        }
+        fclose($fp);
+    }
 }
