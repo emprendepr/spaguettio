@@ -34,6 +34,8 @@ $es = array(
     'spaguettio:chat:error:load' => 'Error al cargar mensajes.',
     'spaguettio:chat:success:sent' => 'Mensaje enviado exitosamente.',
     'spaguettio:chat:error:terms' => 'Error al procesar la aceptación de términos. Por favor intenta de nuevo.',
+    'spaguettio:chat:error:database' => 'Ocurrió un error de base de datos. Por favor contacta al administrador.',
+    'spaguettio:chat:terms:accepted' => '¡Términos aceptados! Bienvenido a la sala de chat.',
     
     // Terms and Conditions
     'spaguettio:chat:terms:title' => 'Términos y Condiciones del Chat',

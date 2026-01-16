@@ -34,6 +34,8 @@ $en = array(
     'spaguettio:chat:error:load' => 'Error loading messages.',
     'spaguettio:chat:success:sent' => 'Message sent successfully.',
     'spaguettio:chat:error:terms' => 'Error processing terms acceptance. Please try again.',
+    'spaguettio:chat:error:database' => 'Database error occurred. Please contact administrator.',
+    'spaguettio:chat:terms:accepted' => 'Terms accepted! Welcome to the chat room.',
     
     // Terms and Conditions
     'spaguettio:chat:terms:title' => 'Chat Terms and Conditions',
