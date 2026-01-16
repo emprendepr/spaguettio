@@ -13,6 +13,12 @@ Complete LatinChat-style chat room component for OSSN framework with real-time m
 ### 2. User Interface
 
 #### Chat Room (for all users)
+- **Terms and Conditions Page**: Wizard-style page shown before entering chat
+  - Displays chat rules and community guidelines
+  - Two buttons: "Acepto" (Accept) and "No Acepto" (Don't Accept)
+  - Accept: Records username, date, time in database and redirects to chat
+  - Decline: Redirects to homepage
+  - User acceptance is required only once
 - Real-time chat interface with message display
 - Online users sidebar showing active participants
 - Message input with send button
@@ -57,7 +63,12 @@ Complete LatinChat-style chat room component for OSSN framework with real-time m
    - Stores global chat settings
    - Rate limits, moderation flags, etc.
 
-### 4. Backend Actions (13 total)
+5. **ossn_spaguettio_chat_terms** ⭐ NEW
+   - Records user acceptance of terms and conditions
+   - Stores user_guid, username, acceptance status
+   - Records timestamp of acceptance
+
+### 4. Backend Actions (14 total)
 
 #### User Actions:
 - `send.php`: Send chat message
@@ -65,6 +76,7 @@ Complete LatinChat-style chat room component for OSSN framework with real-time m
 - `get_users.php`: Get online users list
 - `register_user.php`: Register user entering chat (uses username)
 - `unregister_user.php`: Remove user leaving chat
+- `accept_terms.php`: Accept or decline terms and conditions ⭐ NEW
 
 #### Admin Actions:
 - `get_rooms.php`: List all chat rooms

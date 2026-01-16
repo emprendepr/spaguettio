@@ -25,6 +25,7 @@ function spaguettio_chat_init() {
     ossn_register_action('chat/get_users', __SPAGUETTIO_CHAT__ . 'actions/get_users.php');
     ossn_register_action('chat/register_user', __SPAGUETTIO_CHAT__ . 'actions/register_user.php');
     ossn_register_action('chat/unregister_user', __SPAGUETTIO_CHAT__ . 'actions/unregister_user.php');
+    ossn_register_action('chat/accept_terms', __SPAGUETTIO_CHAT__ . 'actions/accept_terms.php');
     
     // Register admin actions
     ossn_register_action('chat/get_rooms', __SPAGUETTIO_CHAT__ . 'actions/get_rooms.php');
@@ -69,23 +70,63 @@ function spaguettio_chat_init() {
  * Chat room page handler
  */
 function spaguettio_chat_page_handler($pages) {
-    $page = $pages[0] ?? 'room';
+    $page = $pages[0] ?? 'terms';
     
     if (!ossn_isLoggedin()) {
         redirect(ossn_site_url('login'));
         return false;
     }
     
-    $title = ossn_print('spaguettio:chat:title');
-    $content = ossn_plugin_view('chat/room');
+    // Check if user has accepted terms
+    $user = ossn_loggedin_user();
+    $user_guid = $user->guid;
+    $db = ossn_database();
     
-    $params = array(
-        'title' => $title,
-        'content' => $content,
-    );
+    $terms_check = "SELECT * FROM ossn_spaguettio_chat_terms WHERE user_guid = {$user_guid} AND accepted = 1 LIMIT 1";
+    $has_accepted = $db->getRow($terms_check);
     
-    $contents = ossn_set_page_layout('newsfeed', $params);
-    echo ossn_view_page($title, $contents);
+    // If accessing 'room' directly but hasn't accepted terms, show terms
+    if ($page === 'room' && !$has_accepted) {
+        $page = 'terms';
+    }
+    
+    // If hasn't accepted terms and not explicitly viewing 'terms', show terms
+    if (!$has_accepted && $page !== 'terms') {
+        $page = 'terms';
+    }
+    
+    // Show terms page
+    if ($page === 'terms') {
+        $title = ossn_print('spaguettio:chat:terms:title');
+        $content = ossn_plugin_view('chat/terms');
+        
+        $params = array(
+            'title' => $title,
+            'content' => $content,
+        );
+        
+        $contents = ossn_set_page_layout('newsfeed', $params);
+        echo ossn_view_page($title, $contents);
+        return;
+    }
+    
+    // Show chat room (only if terms accepted)
+    if ($page === 'room' && $has_accepted) {
+        $title = ossn_print('spaguettio:chat:title');
+        $content = ossn_plugin_view('chat/room');
+        
+        $params = array(
+            'title' => $title,
+            'content' => $content,
+        );
+        
+        $contents = ossn_set_page_layout('newsfeed', $params);
+        echo ossn_view_page($title, $contents);
+        return;
+    }
+    
+    // Default: redirect to terms
+    redirect(ossn_site_url('chat/terms'));
 }
 
 /**

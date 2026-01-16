@@ -22,23 +22,28 @@ A LatinChat-style real-time chat room component for OSSN (Open Source Social Net
 
 ## Database Tables
 
-The component creates four tables:
+The component creates five tables:
 
 - `ossn_spaguettio_chat_messages`: Stores all chat messages
 - `ossn_spaguettio_chat_rooms`: Stores chat room information
 - `ossn_spaguettio_chat_users`: Tracks active users in chat rooms
 - `ossn_spaguettio_chat_settings`: Stores chat configuration settings
+- `ossn_spaguettio_chat_terms`: Records user acceptance of terms and conditions
 
 ## Usage
 
 ### For Users
 
 1. Once enabled, a "Chat Room" link appears in the sidebar menu
-2. Click the link to enter the chat room
-3. Your username is automatically registered when you enter
-4. Type messages in the input box and click "Send" or press Enter
-5. See other online users in the right sidebar
-6. System messages show when users join or leave the chat
+2. Click the link to view the Terms and Conditions page
+3. Read and accept the terms by clicking "Acepto" (I Accept)
+   - If you click "No Acepto" (I Don't Accept), you'll be redirected to the homepage
+   - Your acceptance is recorded with your username, date, and time
+4. After accepting, you'll be redirected to the chat room
+5. Your username is automatically registered when you enter
+6. Type messages in the input box and click "Send" or press Enter
+7. See other online users in the right sidebar
+8. System messages show when users join or leave the chat
 
 ### For Administrators
 

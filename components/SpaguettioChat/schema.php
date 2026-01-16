@@ -57,11 +57,24 @@ function spaguettio_chat_install() {
         UNIQUE KEY `setting_key` (`setting_key`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
     
+    // Terms acceptance table
+    $terms_table = "CREATE TABLE IF NOT EXISTS `ossn_spaguettio_chat_terms` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `user_guid` int(11) NOT NULL,
+        `username` varchar(255) NOT NULL,
+        `accepted` tinyint(1) DEFAULT 1,
+        `time_accepted` int(11) NOT NULL,
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `user_guid` (`user_guid`),
+        KEY `time_accepted` (`time_accepted`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
+    
     // Execute table creation
     $db->execute($messages_table);
     $db->execute($rooms_table);
     $db->execute($users_table);
     $db->execute($settings_table);
+    $db->execute($terms_table);
     
     // Insert default room
     $default_room = "INSERT INTO `ossn_spaguettio_chat_rooms` (`name`, `description`, `time_created`) 
@@ -93,6 +106,7 @@ function spaguettio_chat_uninstall() {
     $db->execute("DROP TABLE IF EXISTS `ossn_spaguettio_chat_rooms`;");
     $db->execute("DROP TABLE IF EXISTS `ossn_spaguettio_chat_users`;");
     $db->execute("DROP TABLE IF EXISTS `ossn_spaguettio_chat_settings`;");
+    $db->execute("DROP TABLE IF EXISTS `ossn_spaguettio_chat_terms`;");
     
     return true;
 }
