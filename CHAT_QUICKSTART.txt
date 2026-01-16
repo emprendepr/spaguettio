@@ -14,6 +14,7 @@
    ✓ chat-style.css
    ✓ chat-script.js
    ✓ chat-api.php
+   ✓ chat-admin.php (optional - admin panel)
 
 2. Make sure directory has write permissions:
    chmod 755 /path/to/directory
@@ -30,6 +31,7 @@
 😀 9 clickable emoticons
 👥 Online users list
 @ Mention users by clicking
+🔧 Admin panel for management
 📱 Mobile responsive
 🔒 Secure & XSS protected
 💾 No database needed
@@ -57,6 +59,23 @@ Edit chat-api.php:
 Edit chat-script.js:
   UPDATE_FREQUENCY = 2000; // Update interval (ms)
 
+🔧 ADMIN PANEL
+
+Access: http://your-server/chat-admin.php
+Default credentials:
+  Username: admin
+  Password: spaguettio2026
+
+⚠️ CHANGE PASSWORD in chat-admin.php before production!
+
+Admin features:
+  📊 Real-time statistics
+  👥 View/kick connected users
+  💬 View/delete messages
+  🗑️ Clear all messages
+  🧹 Clear users list
+  📈 Top active users
+
 🐛 TROUBLESHOOTING
 
 Problem: Messages don't save
@@ -68,6 +87,10 @@ Problem: Users don't appear online
 Problem: Chat doesn't update
 → Check browser console for errors
 → Verify chat-api.php is accessible
+
+Problem: Can't access admin panel
+→ Check credentials in chat-admin.php
+→ Verify PHP sessions are enabled
 
 🔍 TEST MULTI-USER
 

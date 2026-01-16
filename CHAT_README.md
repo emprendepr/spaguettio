@@ -12,6 +12,7 @@ Un sistema de chat en tiempo real estilo LatinChat con diseño retro-moderno par
 - **Lista de usuarios en línea** con indicador verde pulsante
 - **Mención de usuarios** haciendo click en su nombre (agrega @usuario)
 - **Mensajes del sistema** con fondo amarillo
+- **Panel de administración** completo para gestionar el chat
 - **Diseño responsive** para dispositivos móviles
 - **Sin base de datos** - usa archivos JSON para persistencia
 - **Auto-scroll inteligente** - solo cuando el usuario está al final
@@ -30,6 +31,7 @@ Un sistema de chat en tiempo real estilo LatinChat con diseño retro-moderno par
    - `chat-style.css`
    - `chat-script.js`
    - `chat-api.php`
+   - `chat-admin.php` (opcional - panel de administración)
 
 2. Asegúrate de que el directorio tenga permisos de escritura para crear archivos JSON
 
@@ -45,6 +47,7 @@ Un sistema de chat en tiempo real estilo LatinChat con diseño retro-moderno par
 ├── chat-style.css        # Estilos CSS con diseño retro-moderno
 ├── chat-script.js        # JavaScript del cliente
 ├── chat-api.php          # API backend REST
+├── chat-admin.php        # Panel de administración (opcional)
 ├── chat_messages.json    # Almacenamiento de mensajes (auto-generado)
 └── chat_users.json       # Usuarios activos (auto-generado)
 ```
@@ -78,6 +81,31 @@ Y en `chat-script.js`:
 ```javascript
 const UPDATE_FREQUENCY = 2000; // Milisegundos entre actualizaciones (2s)
 ```
+
+### Panel de Administración
+
+Para acceder al panel de administración, abre `chat-admin.php` en tu navegador.
+
+**Credenciales por defecto:**
+- Usuario: `admin`
+- Contraseña: `spaguettio2026`
+
+⚠️ **IMPORTANTE**: Cambia las credenciales en `chat-admin.php` antes de usar en producción:
+
+```php
+define('ADMIN_USERNAME', 'tu_usuario');
+define('ADMIN_PASSWORD', 'tu_contraseña_segura');
+```
+
+**Funciones del panel de administración:**
+- 📊 Estadísticas en tiempo real (mensajes totales, usuarios activos, etc.)
+- 👥 Ver usuarios conectados con su última actividad
+- 💬 Ver todos los mensajes del chat con detalles
+- 🗑️ Eliminar mensajes individuales
+- ❌ Desconectar usuarios específicos
+- 🧹 Limpiar todo el historial de mensajes
+- 🔄 Limpiar lista de usuarios
+- 📈 Top usuarios más activos
 
 ## 🛡️ Seguridad
 
