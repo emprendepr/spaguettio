@@ -20,6 +20,18 @@ A LatinChat-style real-time chat room component for OSSN (Open Source Social Net
 4. Find "Spaguettio Chat" and click "Enable"
 5. The component will automatically create the necessary database tables
 
+### Important: After Updating Component Files
+
+If you update the component files after installation:
+1. **Disable** the component in OSSN admin panel
+2. **Enable** it again to reload the PHP files
+3. Clear your browser cache
+4. Alternatively, restart your web server to clear PHP opcache:
+   ```bash
+   sudo systemctl restart apache2  # For Apache
+   sudo systemctl restart php-fpm  # For PHP-FPM
+   ```
+
 ## Database Tables
 
 The component creates five tables:
