@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component xmlns="http://www.opensource-socialnetwork.org/v/3.0">
+    <name>Lounge</name>
+    <id>lounge</id>
+    <author>Spaguettio Team</author>
+    <description>Chat lounge en tiempo real estilo LatinChat con diseño retro-moderno. Incluye panel de administración completo para moderación.</description>
+    <license>MIT</license>
+    <author_url>https://spaguettio.com</author_url>
+    <license_url>https://opensource.org/licenses/MIT</license_url>
+    <version>1.0</version>
+    <requires>
+        <type>ossn_version</type>
+        <version>6.0</version>
+    </requires>
+</component>
