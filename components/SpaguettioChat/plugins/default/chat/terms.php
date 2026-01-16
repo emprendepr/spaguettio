@@ -40,20 +40,64 @@
         </div>
         
         <div class="terms-actions">
-            <form id="terms-form" method="post" action="<?php echo ossn_site_url('action/chat/accept_terms'); ?>">
-                <?php echo ossn_plugin_view('input/security_token'); ?>
-                <div class="button-container">
-                    <button type="submit" name="action" value="decline" class="btn btn-decline">
-                        <i class="fa fa-times"></i>
-                        <?php echo ossn_print('spaguettio:chat:terms:decline'); ?>
-                    </button>
-                    <button type="submit" name="action" value="accept" class="btn btn-accept">
-                        <i class="fa fa-check"></i>
-                        <?php echo ossn_print('spaguettio:chat:terms:accept'); ?>
-                    </button>
-                </div>
-            </form>
+            <div class="button-container">
+                <button type="button" id="btn-decline" class="btn btn-decline">
+                    <i class="fa fa-times"></i>
+                    <?php echo ossn_print('spaguettio:chat:terms:decline'); ?>
+                </button>
+                <button type="button" id="btn-accept" class="btn btn-accept">
+                    <i class="fa fa-check"></i>
+                    <?php echo ossn_print('spaguettio:chat:terms:accept'); ?>
+                </button>
+            </div>
         </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var btnAccept = document.getElementById('btn-accept');
+    var btnDecline = document.getElementById('btn-decline');
+    
+    if (btnAccept) {
+        btnAccept.addEventListener('click', function() {
+            Ossn.PostRequest({
+                url: Ossn.site_url + 'action/chat/accept_terms',
+                params: { action: 'accept' },
+                callback: function(response) {
+                    if (response && response.redirect) {
+                        window.location.href = response.redirect;
+                    } else if (response && response.success) {
+                        window.location.href = Ossn.site_url + 'chat/room';
+                    } else {
+                        // Fallback redirect on success
+                        window.location.href = Ossn.site_url + 'chat/room';
+                    }
+                },
+                error: function() {
+                    alert('<?php echo ossn_print('spaguettio:chat:error:terms'); ?>');
+                }
+            });
+        });
+    }
+    
+    if (btnDecline) {
+        btnDecline.addEventListener('click', function() {
+            Ossn.PostRequest({
+                url: Ossn.site_url + 'action/chat/accept_terms',
+                params: { action: 'decline' },
+                callback: function(response) {
+                    if (response && response.redirect) {
+                        window.location.href = response.redirect;
+                    } else {
+                        window.location.href = Ossn.site_url;
+                    }
+                },
+                error: function() {
+                    window.location.href = Ossn.site_url;
+                }
+            });
+        });
+    }
+});
+</script>
     </div>
 </div>
 

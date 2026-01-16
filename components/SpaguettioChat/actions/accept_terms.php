@@ -1,10 +1,18 @@
 <?php
 /**
  * Accept or decline chat terms action
+ * 
+ * This action handles both AJAX and non-AJAX requests.
+ * For AJAX: Returns JSON with redirect URL
+ * For non-AJAX: Redirects directly
  */
 
 if (!ossn_isLoggedin()) {
-    header("Location: " . ossn_site_url('login'));
+    if (ossn_is_xhr()) {
+        echo json_encode(array('error' => true, 'redirect' => ossn_site_url('login')));
+    } else {
+        redirect('login');
+    }
     exit;
 }
 
@@ -17,7 +25,13 @@ $user_guid = $user->guid;
 
 if ($action === 'decline') {
     // User declined terms, redirect to homepage
-    header("Location: " . ossn_site_url());
+    if (ossn_is_xhr()) {
+        global $Ossn;
+        $Ossn->redirect = ossn_site_url();
+        echo json_encode(array('success' => true, 'redirect' => ossn_site_url()));
+    } else {
+        redirect();
+    }
     exit;
 }
 
@@ -40,22 +54,40 @@ if ($action === 'accept') {
         if ($db->execute()) {
             // Success - redirect to chat room
             ossn_trigger_message(ossn_print('spaguettio:chat:terms:accepted'), 'success');
-            header("Location: " . ossn_site_url('chat/room'));
-            exit;
+            if (ossn_is_xhr()) {
+                global $Ossn;
+                $Ossn->redirect = ossn_site_url('chat/room');
+            } else {
+                redirect('chat/room');
+            }
         } else {
             // Database error
             ossn_trigger_message(ossn_print('spaguettio:chat:error:terms'), 'error');
-            header("Location: " . ossn_site_url('chat/terms'));
-            exit;
+            if (ossn_is_xhr()) {
+                global $Ossn;
+                $Ossn->redirect = ossn_site_url('chat/terms');
+            } else {
+                redirect('chat/terms');
+            }
         }
     } catch (Exception $e) {
         // Exception occurred
         ossn_trigger_message(ossn_print('spaguettio:chat:error:database'), 'error');
-        header("Location: " . ossn_site_url('chat/terms'));
-        exit;
+        if (ossn_is_xhr()) {
+            global $Ossn;
+            $Ossn->redirect = ossn_site_url('chat/terms');
+        } else {
+            redirect('chat/terms');
+        }
     }
-} else {
-    // Invalid action
-    header("Location: " . ossn_site_url());
     exit;
 }
+
+// Invalid action - redirect to homepage
+if (ossn_is_xhr()) {
+    global $Ossn;
+    $Ossn->redirect = ossn_site_url();
+} else {
+    redirect();
+}
+exit;
