@@ -35,12 +35,15 @@ if ($action === 'accept') {
     if ($db->execute()) {
         // Redirect to chat room
         redirect(ossn_site_url('chat/room'));
+        exit;
     } else {
         // Error occurred
         ossn_trigger_message(ossn_print('spaguettio:chat:error:terms'), 'error');
         redirect(ossn_site_url('chat'));
+        exit;
     }
 } else {
     // Invalid action
     redirect(ossn_site_url());
+    exit;
 }
