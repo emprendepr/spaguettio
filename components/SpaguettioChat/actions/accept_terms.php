@@ -40,18 +40,18 @@ if ($action === 'accept') {
         if ($db->execute()) {
             // Success - redirect to chat room
             ossn_trigger_message(ossn_print('spaguettio:chat:terms:accepted'), 'success');
-            redirect(ossn_site_url('chat'), 'room');
+            redirect(ossn_site_url('chat/room'));
             exit;
         } else {
             // Database error
             ossn_trigger_message(ossn_print('spaguettio:chat:error:terms'), 'error');
-            redirect(ossn_site_url('chat'), 'terms');
+            redirect(ossn_site_url('chat/terms'));
             exit;
         }
     } catch (Exception $e) {
         // Exception occurred
         ossn_trigger_message(ossn_print('spaguettio:chat:error:database'), 'error');
-        redirect(ossn_site_url('chat'), 'terms');
+        redirect(ossn_site_url('chat/terms'));
         exit;
     }
 } else {
