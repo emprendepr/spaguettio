@@ -1,0 +1,12 @@
+# Chat data files (auto-generated)
+chat_messages.json
+chat_users.json
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*~
