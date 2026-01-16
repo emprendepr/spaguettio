@@ -20,15 +20,18 @@ if (empty($room_id) || $room_id == 1) {
 $db = new OssnDatabase();
 
 // Delete room users
-$db->execute("DELETE FROM ossn_spaguettio_chat_users WHERE room_id = {$room_id}");
+$db->statement("DELETE FROM ossn_spaguettio_chat_users WHERE room_id = {$room_id}");
+$db->execute();
 
 // Delete room messages
-$db->execute("DELETE FROM ossn_spaguettio_chat_messages WHERE room_id = {$room_id}");
+$db->statement("DELETE FROM ossn_spaguettio_chat_messages WHERE room_id = {$room_id}");
+$db->execute();
 
 // Delete room
 $query = "DELETE FROM ossn_spaguettio_chat_rooms WHERE id = {$room_id}";
 
-if ($db->execute($query)) {
+$db->statement($query);
+if ($db->execute()) {
     echo json_encode(array('success' => true));
 } else {
     echo json_encode(array('success' => false, 'error' => 'Database error'));

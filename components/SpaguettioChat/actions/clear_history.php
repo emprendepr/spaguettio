@@ -15,7 +15,8 @@ $db = new OssnDatabase();
 // Clear all messages
 $query = "DELETE FROM ossn_spaguettio_chat_messages";
 
-if ($db->execute($query)) {
+$db->statement($query);
+if ($db->execute()) {
     echo json_encode(array('success' => true));
 } else {
     echo json_encode(array('success' => false, 'error' => 'Database error'));

@@ -30,7 +30,8 @@ foreach ($settings as $key => $value) {
               VALUES ('{$key}', '{$value}')
               ON DUPLICATE KEY UPDATE setting_value = '{$value}'";
     
-    if (!$db->execute($query)) {
+    $db->statement($query);
+    if (!$db->execute()) {
         $success = false;
     }
 }

@@ -26,8 +26,9 @@ $time = time();
 $query = "INSERT INTO ossn_spaguettio_chat_rooms (name, description, max_users, time_created)
           VALUES ('" . $db->escape($name) . "', '" . $db->escape($description) . "', {$max_users}, {$time})";
 
-if ($db->execute($query)) {
-    echo json_encode(array('success' => true, 'room_id' => $db->lastInsertId()));
+$db->statement($query);
+if ($db->execute()) {
+    echo json_encode(array('success' => true, 'room_id' => $db->getLastEntry()));
 } else {
     echo json_encode(array('success' => false, 'error' => 'Database error'));
 }

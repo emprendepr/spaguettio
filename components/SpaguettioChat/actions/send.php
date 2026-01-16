@@ -25,8 +25,9 @@ $user_guid = $user->guid;
 
 // Get room ID
 $db = new OssnDatabase();
-$room_query = "SELECT id FROM ossn_spaguettio_chat_rooms WHERE name = 'Sala Principal' LIMIT 1";
-$room_result = $db->getRow($room_query);
+$db->statement("SELECT id FROM ossn_spaguettio_chat_rooms WHERE name = 'Sala Principal' LIMIT 1");
+$db->execute();
+$room_result = $db->fetch();
 $room_id = $room_result ? $room_result->id : 1;
 
 // Sanitize message
@@ -38,12 +39,14 @@ $time = time();
 $insert_query = "INSERT INTO ossn_spaguettio_chat_messages (room_id, user_guid, username, message, type, time_created) 
                  VALUES ({$room_id}, {$user_guid}, '{$username}', '" . $db->escape($message) . "', 'user', {$time})";
 
-if ($db->execute($insert_query)) {
+$db->statement($insert_query);
+if ($db->execute()) {
     // Update user's last active time
     $update_user = "UPDATE ossn_spaguettio_chat_users 
                     SET last_active = {$time} 
                     WHERE user_guid = {$user_guid} AND room_id = {$room_id}";
-    $db->execute($update_user);
+    $db->statement($update_user);
+    $db->execute();
     
     header('Content-Type: application/json');
     echo json_encode(array('success' => true));

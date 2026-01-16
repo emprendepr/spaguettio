@@ -29,7 +29,8 @@ $query = "UPDATE ossn_spaguettio_chat_rooms
               max_users = {$max_users}
           WHERE id = {$room_id}";
 
-if ($db->execute($query)) {
+$db->statement($query);
+if ($db->execute()) {
     echo json_encode(array('success' => true));
 } else {
     echo json_encode(array('success' => false, 'error' => 'Database error'));

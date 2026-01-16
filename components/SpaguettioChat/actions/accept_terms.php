@@ -31,7 +31,8 @@ if ($action === 'accept') {
               VALUES ({$user_guid}, '{$username}', 1, {$time})
               ON DUPLICATE KEY UPDATE accepted = 1, time_accepted = {$time}";
     
-    if ($db->execute($query)) {
+    $db->statement($query);
+    if ($db->execute()) {
         // Redirect to chat room
         redirect(ossn_site_url('chat/room'));
     } else {

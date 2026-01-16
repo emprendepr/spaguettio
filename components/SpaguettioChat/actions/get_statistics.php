@@ -15,13 +15,17 @@ $db = new OssnDatabase();
 // Get online users count
 $timeout = time() - 300;
 $online_query = "SELECT COUNT(DISTINCT user_guid) as count FROM ossn_spaguettio_chat_users WHERE last_active >= {$timeout}";
-$online_result = $db->getRow($online_query);
+$db->statement($online_query);
+$db->execute();
+$online_result = $db->fetch();
 $online_users = $online_result ? $online_result->count : 0;
 
 // Get messages today
 $today_start = strtotime('today');
 $messages_query = "SELECT COUNT(*) as count FROM ossn_spaguettio_chat_messages WHERE time_created >= {$today_start}";
-$messages_result = $db->getRow($messages_query);
+$db->statement($messages_query);
+$db->execute();
+$messages_result = $db->fetch();
 $messages_today = $messages_result ? $messages_result->count : 0;
 
 // Get average users (last 7 days)
@@ -32,7 +36,9 @@ $avg_query = "SELECT AVG(daily_users) as avg FROM (
                 WHERE time_joined >= {$week_ago}
                 GROUP BY day
               ) as daily_stats";
-$avg_result = $db->getRow($avg_query);
+$db->statement($avg_query);
+$db->execute();
+$avg_result = $db->fetch();
 $avg_users = $avg_result && $avg_result->avg ? round($avg_result->avg) : 0;
 
 echo json_encode(array(

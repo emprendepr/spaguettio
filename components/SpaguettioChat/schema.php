@@ -70,17 +70,23 @@ function spaguettio_chat_install() {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
     
     // Execute table creation
-    $db->execute($messages_table);
-    $db->execute($rooms_table);
-    $db->execute($users_table);
-    $db->execute($settings_table);
-    $db->execute($terms_table);
+    $db->statement($messages_table);
+    $db->execute();
+    $db->statement($rooms_table);
+    $db->execute();
+    $db->statement($users_table);
+    $db->execute();
+    $db->statement($settings_table);
+    $db->execute();
+    $db->statement($terms_table);
+    $db->execute();
     
     // Insert default room
     $default_room = "INSERT INTO `ossn_spaguettio_chat_rooms` (`name`, `description`, `time_created`) 
                      VALUES ('Sala Principal', 'Sala de chat principal de Spaguettio', " . time() . ")
                      ON DUPLICATE KEY UPDATE `name` = `name`;";
-    $db->execute($default_room);
+    $db->statement($default_room);
+    $db->execute();
     
     // Insert default settings
     $default_settings = array(
@@ -93,7 +99,8 @@ function spaguettio_chat_install() {
         $insert_setting = "INSERT INTO `ossn_spaguettio_chat_settings` (`setting_key`, `setting_value`) 
                           VALUES ('" . $setting[0] . "', '" . $setting[1] . "')
                           ON DUPLICATE KEY UPDATE `setting_value` = `setting_value`;";
-        $db->execute($insert_setting);
+        $db->statement($insert_setting);
+        $db->execute();
     }
     
     return true;
@@ -102,11 +109,16 @@ function spaguettio_chat_install() {
 function spaguettio_chat_uninstall() {
     $db = new OssnDatabase();
     
-    $db->execute("DROP TABLE IF EXISTS `ossn_spaguettio_chat_messages`;");
-    $db->execute("DROP TABLE IF EXISTS `ossn_spaguettio_chat_rooms`;");
-    $db->execute("DROP TABLE IF EXISTS `ossn_spaguettio_chat_users`;");
-    $db->execute("DROP TABLE IF EXISTS `ossn_spaguettio_chat_settings`;");
-    $db->execute("DROP TABLE IF EXISTS `ossn_spaguettio_chat_terms`;");
+    $db->statement("DROP TABLE IF EXISTS `ossn_spaguettio_chat_messages`;");
+    $db->execute();
+    $db->statement("DROP TABLE IF EXISTS `ossn_spaguettio_chat_rooms`;");
+    $db->execute();
+    $db->statement("DROP TABLE IF EXISTS `ossn_spaguettio_chat_users`;");
+    $db->execute();
+    $db->statement("DROP TABLE IF EXISTS `ossn_spaguettio_chat_settings`;");
+    $db->execute();
+    $db->statement("DROP TABLE IF EXISTS `ossn_spaguettio_chat_terms`;");
+    $db->execute();
     
     return true;
 }

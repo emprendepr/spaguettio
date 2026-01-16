@@ -19,8 +19,9 @@ $user_guid = $user->guid;
 
 // Get room ID
 $db = new OssnDatabase();
-$room_query = "SELECT id FROM ossn_spaguettio_chat_rooms WHERE name = 'Sala Principal' LIMIT 1";
-$room_result = $db->getRow($room_query);
+$db->statement("SELECT id FROM ossn_spaguettio_chat_rooms WHERE name = 'Sala Principal' LIMIT 1");
+$db->execute();
+$room_result = $db->fetch();
 $room_id = $room_result ? $room_result->id : 1;
 
 $time = time();
@@ -30,12 +31,14 @@ $insert_query = "INSERT INTO ossn_spaguettio_chat_users (user_guid, username, ro
                  VALUES ({$user_guid}, '{$username}', {$room_id}, {$time}, {$time})
                  ON DUPLICATE KEY UPDATE last_active = {$time}";
 
-if ($db->execute($insert_query)) {
+$db->statement($insert_query);
+if ($db->execute()) {
     // Add system message
     $join_message = "{$username} " . ossn_print('spaguettio:chat:joined');
     $system_query = "INSERT INTO ossn_spaguettio_chat_messages (room_id, user_guid, username, message, type, time_created)
                      VALUES ({$room_id}, {$user_guid}, '{$username}', '" . $db->escape($join_message) . "', 'system', {$time})";
-    $db->execute($system_query);
+    $db->statement($system_query);
+    $db->execute();
     
     echo json_encode(array('success' => true));
 } else {

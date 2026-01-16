@@ -83,8 +83,9 @@ function spaguettio_chat_page_handler($pages) {
     $user_guid = $user->guid;
     $db = new OssnDatabase();
     
-    $terms_check = "SELECT * FROM ossn_spaguettio_chat_terms WHERE user_guid = {$user_guid} AND accepted = 1 LIMIT 1";
-    $has_accepted = $db->getRow($terms_check);
+    $db->statement("SELECT * FROM ossn_spaguettio_chat_terms WHERE user_guid = {$user_guid} AND accepted = 1 LIMIT 1");
+    $db->execute();
+    $has_accepted = $db->fetch();
     
     // If accessing 'room' directly but hasn't accepted terms, show terms
     if ($page === 'room' && !$has_accepted) {

@@ -20,7 +20,9 @@ $query = "SELECT r.id, r.name, r.description, r.max_users, r.is_active, r.time_c
           GROUP BY r.id
           ORDER BY r.time_created DESC";
 
-$rooms = $db->getAll($query);
+$db->statement($query);
+$db->execute();
+$rooms = $db->fetch(true);
 $result = array();
 
 if ($rooms) {
