@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<theme xmlns="http://www.opensource-socialnetwork.org/v/3.0">
+    <name>Spaguettio Modern</name>
+    <id>spaguettio-modern</id>
+    <author>Spaguettio Team</author>
+    <description>Tema moderno y elegante con diseño oscuro y neón para la landing page de Spaguettio</description>
+    <license>Custom</license>
+    <author_url>https://spaguettio.com</author_url>
+    <license_url>https://spaguettio.com</license_url>
+    <version>1.0</version>
+    <requires>
+        <type>ossn</type>
+        <version>6.0</version>
+    </requires>
+</theme>
