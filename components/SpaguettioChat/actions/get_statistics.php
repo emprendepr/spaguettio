@@ -10,7 +10,7 @@ if (!ossn_isAdminLoggedin()) {
     exit;
 }
 
-$db = ossn_database();
+$db = new OssnDatabase();
 
 // Get online users count
 $timeout = time() - 300;

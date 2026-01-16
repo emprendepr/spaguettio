@@ -14,7 +14,7 @@ $room = input('room', 'main');
 $last_id = input('last_id', 0);
 
 // Get room ID
-$db = ossn_database();
+$db = new OssnDatabase();
 $room_query = "SELECT id FROM ossn_spaguettio_chat_rooms WHERE name = 'Sala Principal' LIMIT 1";
 $room_result = $db->getRow($room_query);
 $room_id = $room_result ? $room_result->id : 1;

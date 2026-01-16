@@ -15,7 +15,7 @@ $max_users = input('max_users', 100);
 $rate_limit = input('rate_limit', 10);
 $enable_moderation = input('enable_moderation') ? 1 : 0;
 
-$db = ossn_database();
+$db = new OssnDatabase();
 
 // Update settings
 $settings = array(

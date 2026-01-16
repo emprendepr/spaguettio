@@ -17,7 +17,7 @@ if (empty($room_id) || $room_id == 1) {
     exit;
 }
 
-$db = ossn_database();
+$db = new OssnDatabase();
 
 // Delete room users
 $db->execute("DELETE FROM ossn_spaguettio_chat_users WHERE room_id = {$room_id}");

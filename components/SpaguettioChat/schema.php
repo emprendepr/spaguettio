@@ -6,7 +6,7 @@
  */
 
 function spaguettio_chat_install() {
-    $db = ossn_database();
+    $db = new OssnDatabase();
     
     // Chat messages table
     $messages_table = "CREATE TABLE IF NOT EXISTS `ossn_spaguettio_chat_messages` (
@@ -100,7 +100,7 @@ function spaguettio_chat_install() {
 }
 
 function spaguettio_chat_uninstall() {
-    $db = ossn_database();
+    $db = new OssnDatabase();
     
     $db->execute("DROP TABLE IF EXISTS `ossn_spaguettio_chat_messages`;");
     $db->execute("DROP TABLE IF EXISTS `ossn_spaguettio_chat_rooms`;");

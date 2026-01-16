@@ -19,7 +19,7 @@ if (empty($name)) {
     exit;
 }
 
-$db = ossn_database();
+$db = new OssnDatabase();
 $time = time();
 
 // Insert new room

@@ -10,7 +10,7 @@ if (!ossn_isAdminLoggedin()) {
     exit;
 }
 
-$db = ossn_database();
+$db = new OssnDatabase();
 
 // Get all rooms with user counts
 $query = "SELECT r.id, r.name, r.description, r.max_users, r.is_active, r.time_created,
