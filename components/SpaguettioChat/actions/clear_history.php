@@ -10,7 +10,7 @@ if (!ossn_isAdminLoggedin()) {
     exit;
 }
 
-$db = new OssnDatabase();
+$db = new OssnEntities();
 
 // Clear all messages
 $query = "DELETE FROM ossn_spaguettio_chat_messages";

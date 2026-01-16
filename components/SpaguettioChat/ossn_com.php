@@ -81,16 +81,19 @@ function spaguettio_chat_page_handler($pages) {
     // Check if user has accepted terms
     $user = ossn_loggedin_user();
     $user_guid = $user->guid;
-    $db = new OssnDatabase();
+    
+    // Use OssnEntities for database access (OSSN 8.9 compatible)
+    $db = new OssnEntities;
     
     // Check if table exists and user has accepted
     $has_accepted = false;
     try {
         $db->statement("SELECT * FROM ossn_spaguettio_chat_terms WHERE user_guid = {$user_guid} AND accepted = 1 LIMIT 1");
         $db->execute();
-        $has_accepted = $db->fetch();
+        $result = $db->fetch();
+        $has_accepted = !empty($result);
     } catch (Exception $e) {
-        // Table might not exist yet, user hasn't accepted terms
+        // Table might not exist yet or query failed, user hasn't accepted terms
         $has_accepted = false;
     }
     

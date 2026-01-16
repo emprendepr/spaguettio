@@ -13,7 +13,7 @@ if (!ossn_isLoggedin()) {
 $room = input('room', 'main');
 
 // Get room ID
-$db = new OssnDatabase();
+$db = new OssnEntities();
 $db->statement("SELECT id FROM ossn_spaguettio_chat_rooms WHERE name = 'Sala Principal' LIMIT 1");
 $db->execute();
 $room_result = $db->fetch();

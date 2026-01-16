@@ -20,7 +20,7 @@ if (empty($room_id) || empty($name)) {
     exit;
 }
 
-$db = new OssnDatabase();
+$db = new OssnEntities();
 
 // Update room
 $query = "UPDATE ossn_spaguettio_chat_rooms 

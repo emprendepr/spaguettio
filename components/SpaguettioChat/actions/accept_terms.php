@@ -23,7 +23,7 @@ if ($action === 'decline') {
 
 if ($action === 'accept') {
     // User accepted terms, record in database
-    $db = new OssnDatabase();
+    $db = new OssnEntities();
     $time = time();
     
     // Insert or update terms acceptance
